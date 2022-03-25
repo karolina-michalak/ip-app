@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 
 import './App.css';
+import { SearchHistory } from './components/searchHistory/SearchHistory';
+import { SearchForm } from './components/searchForm/SearchForm';
+import { Map } from './components/map/Map';
 
 
 function App() {
@@ -12,6 +14,9 @@ function App() {
   const [searchData, setSearchData] = useState(null);
   const [searchList, setSearchList] = useState([]);
   const [error, setError] = useState(null);
+  const [clientsCoords, setClientsCoords] = useState([]);
+  const [searchCoords, setSearchCoords] = useState([])
+
 
   const getClientsIp = async () => {
     const response = await axios.get('https://geolocation-db.com/json/');
@@ -29,6 +34,9 @@ function App() {
       setError(response.data.message)
     } else {
       setSearchData(response.data)
+      if (error) {
+        setError(null)
+      }
     }
   };
 
@@ -44,29 +52,41 @@ function App() {
     }
   }, [clientsIp]);
 
-  const handleInputChange = (e) => {
-    setSearchIp(e.target.value);
-  };
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    getSearchData()
-    setSearchList([searchIp, ...searchList])
-  };
+  useEffect(() => {
+    if (!clientsData) {
+      return
+    }
+    setClientsCoords([clientsData.lat, clientsData.lon])
+  }, [clientsData])
+
+   useEffect(() => {
+    if (!searchData) {
+      return
+    }
+    setSearchCoords([searchData.lat, searchData.lon])
+  }, [searchData])
+
+
 
 
   return (
     <div className="App">
       {clientsData && clientsData.city}
-      <form onSubmit={handleSearch}>
-        <input value={searchIp} onChange={handleInputChange} />
-        <button type="submit">search</button>
-      </form>
+      <SearchForm
+        searchIp={searchIp}
+        setSearchIp={setSearchIp}
+        getSearchData={getSearchData}
+        searchList={searchList}
+        setSearchList={setSearchList}
+      />
       <div>{searchData && searchData.city}</div>
       <div>
         {error}
-        {searchList.slice(0,10).map(o => <div key={uuidv4()}>{o}</div>)}
+        <SearchHistory searchList={searchList} />
       </div>
+      <Map coords={clientsCoords} />
+      <Map coords={searchCoords} />
     </div>
   );
 }
