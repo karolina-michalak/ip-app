@@ -1,25 +1,21 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-import './App.css';
-import { SearchHistory } from './components/searchHistory/SearchHistory';
-import { SearchForm } from './components/searchForm/SearchForm';
-import { Map } from './components/map/Map';
-
+import "./App.css";
+import { SearchHistory } from "./components/searchHistory/SearchHistory";
+import { SearchForm } from "./components/searchForm/SearchForm";
+import { Map } from "./components/map/Map";
 
 function App() {
-  const [clientsIp, setClientsIp] = useState('');
+  const [clientsIp, setClientsIp] = useState(null);
   const [clientsData, setClientsData] = useState(null);
   const [searchIp, setSearchIp] = useState('');
   const [searchData, setSearchData] = useState(null);
   const [searchList, setSearchList] = useState([]);
   const [error, setError] = useState(null);
-  const [clientsCoords, setClientsCoords] = useState([]);
-  const [searchCoords, setSearchCoords] = useState([])
-
 
   const getClientsIp = async () => {
-    const response = await axios.get('https://geolocation-db.com/json/');
+    const response = await axios.get("https://geolocation-db.com/json/");
     setClientsIp(response.data.IPv4);
   };
 
@@ -29,50 +25,40 @@ function App() {
   };
 
   const getSearchData = async () => {
-    const response = await axios.get(`http://ip-api.com/json/${searchIp}`)
-    if (response.data.status === 'fail') {
-      setError(response.data.message)
+    if(!searchIp) {
+      return
+    }
+    const response = await axios.get(`http://ip-api.com/json/${searchIp}`);
+    if (response.data.status === "fail") {
+      setError("Invalid query");
+      setSearchData(null);
     } else {
-      setSearchData(response.data)
+      setSearchData(response.data);
       if (error) {
-        setError(null)
+        setError(null);
       }
     }
   };
 
   useEffect(() => {
-    getClientsIp()
+    getClientsIp();
   }, []);
 
   useEffect(() => {
-    if (clientsIp === '') {
-      return
+    if (!clientsIp) {
+      return;
     } else {
-      getClientsData()
+      getClientsData();
     }
   }, [clientsIp]);
 
-
-  useEffect(() => {
-    if (!clientsData) {
-      return
-    }
-    setClientsCoords([clientsData.lat, clientsData.lon])
-  }, [clientsData])
-
-   useEffect(() => {
-    if (!searchData) {
-      return
-    }
-    setSearchCoords([searchData.lat, searchData.lon])
-  }, [searchData])
-
-
-
-
   return (
     <div className="App">
-      {clientsData && clientsData.city}
+      <SearchHistory searchList={searchList} />
+      <div>
+        <Map data={clientsData} />
+        {clientsData && clientsData.city}
+      </div>
       <SearchForm
         searchIp={searchIp}
         setSearchIp={setSearchIp}
@@ -80,13 +66,11 @@ function App() {
         searchList={searchList}
         setSearchList={setSearchList}
       />
-      <div>{searchData && searchData.city}</div>
+      <div>{error}</div>
       <div>
-        {error}
-        <SearchHistory searchList={searchList} />
+        <Map data={searchData} />
+        <div>{searchData && searchData.city}</div>
       </div>
-      <Map coords={clientsCoords} />
-      <Map coords={searchCoords} />
     </div>
   );
 }
