@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import "./App.css";
+import * as S from "./style";
 import { SearchHistory } from "./components/searchHistory/SearchHistory";
 import { SearchForm } from "./components/searchForm/SearchForm";
-import { Map } from "./components/map/Map";
+import { MapWithDetails } from "./components/mapWithDetails/MapWithDetails";
 
 function App() {
   const [clientsIp, setClientsIp] = useState(null);
   const [clientsData, setClientsData] = useState(null);
-  const [searchIp, setSearchIp] = useState('');
+  const [searchIp, setSearchIp] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [searchList, setSearchList] = useState([]);
   const [error, setError] = useState(null);
@@ -25,8 +25,8 @@ function App() {
   };
 
   const getSearchData = async () => {
-    if(!searchIp) {
-      return
+    if (!searchIp) {
+      return;
     }
     const response = await axios.get(`http://ip-api.com/json/${searchIp}`);
     if (response.data.status === "fail") {
@@ -40,6 +40,7 @@ function App() {
     }
   };
 
+  console.log(searchData)
   useEffect(() => {
     getClientsIp();
   }, []);
@@ -53,25 +54,24 @@ function App() {
   }, [clientsIp]);
 
   return (
-    <div className="App">
+    <S.AppWrapper>
       <SearchHistory searchList={searchList} />
-      <div>
-        <Map data={clientsData} />
-        {clientsData && clientsData.city}
-      </div>
-      <SearchForm
-        searchIp={searchIp}
-        setSearchIp={setSearchIp}
-        getSearchData={getSearchData}
-        searchList={searchList}
-        setSearchList={setSearchList}
-      />
-      <div>{error}</div>
-      <div>
-        <Map data={searchData} />
-        <div>{searchData && searchData.city}</div>
-      </div>
-    </div>
+      <S.Wrapper>
+        <MapWithDetails data={clientsData} />
+        <SearchForm
+          searchIp={searchIp}
+          setSearchIp={setSearchIp}
+          getSearchData={getSearchData}
+          searchList={searchList}
+          setSearchList={setSearchList}
+          setSearchData={setSearchData}
+          error={error}
+          setError={setError}
+        />
+        <S.ErrorWrapper>{error}</S.ErrorWrapper>
+        <MapWithDetails data={searchData} searchResult />
+      </S.Wrapper>
+    </S.AppWrapper>
   );
 }
 
