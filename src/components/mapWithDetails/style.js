@@ -25,7 +25,7 @@ export const Container = styled(MapContainer)`
 export const Heading = styled.h1`
   margin: 20px 0 0 0;
 
-  @media screen and (min-width: 1920px) {
+  @media screen and (min-width: 1366px) {
     margin: 0 0 20px 0;
   }
 `;

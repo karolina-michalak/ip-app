@@ -27,7 +27,7 @@ function App() {
   };
 
   const getClientsData = async () => {
-    const response = await axios.get(`http://ip-api.com/json/${clientsIp}`);
+    const response = await axios.get(`https://ip-api.com/json/${clientsIp}`);
     setClientsData(response.data);
   };
 
