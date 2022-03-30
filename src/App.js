@@ -27,15 +27,17 @@ function App() {
   };
 
   const getClientsData = async () => {
-    const response = await axios.get(`https://ip-api.com/json/${clientsIp}`);
+    const response = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('http://ip-api.com/json/1.1.1.1')}`);
     setClientsData(response.data);
   };
+
+  
 
   const getSearchData = async () => {
     if (!searchIp) {
       return;
     }
-    const response = await axios.get(`http://ip-api.com/json/${searchIp}`);
+    const response = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('http://ip-api.com/json/1.1.1.1')}`);
     if (response.data.status === "fail") {
       setError("Invalid query");
       setSearchData(null);
