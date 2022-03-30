@@ -27,7 +27,7 @@ function App() {
   };
 
   const getClientsData = async () => {
-    const response = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('http://ip-api.com/json/1.1.1.1')}`);
+    const response = await axios.get(`http://ip-api.com/json/${clientsIp}`);
     setClientsData(response.data);
   };
 
@@ -37,7 +37,7 @@ function App() {
     if (!searchIp) {
       return;
     }
-    const response = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('http://ip-api.com/json/1.1.1.1')}`);
+    const response = await axios.get(`http://ip-api.com/json/${searchIp}`);
     if (response.data.status === "fail") {
       setError("Invalid query");
       setSearchData(null);
