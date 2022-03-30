@@ -1,14 +1,21 @@
 import styled from "styled-components";
+import Grid from "@mui/material/Grid";
 
-export const AppWrapper = styled.div`
+export const AppWrapper = styled(Grid)`
   display: flex;
   padding: 20px;
-  height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
+  height: 100vh;
+
+  @media screen and (min-width: 1366px) {
+    overflow: hidden;
+  }
 `;
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled(Grid)`
+  height: calc(100vh - 40px);
+`;
 
-export const ErrorWrapper = styled.div``;
-
+export const ErrorWrapper = styled(Grid)`
+  font-size: 20px;
+`;

@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
 
 import * as S from "./style";
 import { SearchHistory } from "./components/searchHistory/SearchHistory";
 import { SearchForm } from "./components/searchForm/SearchForm";
 import { MapWithDetails } from "./components/mapWithDetails/MapWithDetails";
+
+const Item = styled(Paper)(({ theme }) => ({
+  padding: "20px",
+  color: "red",
+}));
 
 function App() {
   const [clientsIp, setClientsIp] = useState(null);
@@ -40,7 +47,6 @@ function App() {
     }
   };
 
-  console.log(searchData)
   useEffect(() => {
     getClientsIp();
   }, []);
@@ -54,9 +60,9 @@ function App() {
   }, [clientsIp]);
 
   return (
-    <S.AppWrapper>
+    <S.AppWrapper container>
       <SearchHistory searchList={searchList} />
-      <S.Wrapper>
+      <S.Wrapper item xs={12} sm={9}>
         <MapWithDetails data={clientsData} />
         <SearchForm
           searchIp={searchIp}
@@ -68,7 +74,11 @@ function App() {
           error={error}
           setError={setError}
         />
-        <S.ErrorWrapper>{error}</S.ErrorWrapper>
+        {error && (
+          <S.ErrorWrapper item xs={12}>
+            <Item>{error}</Item>
+          </S.ErrorWrapper>
+        )}
         <MapWithDetails data={searchData} searchResult />
       </S.Wrapper>
     </S.AppWrapper>

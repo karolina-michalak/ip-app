@@ -3,9 +3,12 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import * as S from "./style";
+
 const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: "20px",
   color: theme.palette.text.secondary,
+  margin: "20px 0",
 }));
 
 export const SearchForm = ({
@@ -19,7 +22,7 @@ export const SearchForm = ({
   setError,
 }) => {
   const handleInputChange = (e) => {
-    setSearchIp(e.target.value);
+    setSearchIp(e.target.value.trim());
   };
 
   const handleSearch = (e) => {
@@ -41,17 +44,18 @@ export const SearchForm = ({
 
   return (
     <Item>
-      <form onSubmit={handleSearch}>
+      <S.StyledForm onSubmit={handleSearch}>
         <TextField
           value={searchIp}
           onChange={handleInputChange}
           size="small"
           placeholder="Search for IP"
+          sx={{ width: "80%" }}
         />
-        <Button variant="contained" type="submit">
+        <Button variant="contained" type="submit" sx={{ width: "18%" }}>
           search
         </Button>
-      </form>
+      </S.StyledForm>
     </Item>
   );
 };
