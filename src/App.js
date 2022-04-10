@@ -22,22 +22,39 @@ function App() {
   const [error, setError] = useState(null);
 
   const getClientsIp = async () => {
-    const response = await axios.get("https://geolocation-db.com/json/");
+    const options = {
+      method: "GET",
+      url: "http://localhost:8000",
+    };
+
+    const response = await axios.request(options);
     setClientsIp(response.data.IPv4);
   };
 
   const getClientsData = async () => {
-    const response = await axios.get(`http://ip-api.com/json/${clientsIp}`);
+    const options = {
+      method: "GET",
+      url: "http://localhost:8000/client",
+      params: { clientsIp: clientsIp },
+    };
+
+    const response = await axios.request(options);
     setClientsData(response.data);
   };
-
-  
 
   const getSearchData = async () => {
     if (!searchIp) {
       return;
     }
-    const response = await axios.get(`http://ip-api.com/json/${searchIp}`);
+
+    const options = {
+      method: "GET",
+      url: "http://localhost:8000/search",
+      params: { searchIp: searchIp },
+    };
+
+    const response = await axios.request(options);
+
     if (response.data.status === "fail") {
       setError("Invalid query");
       setSearchData(null);
